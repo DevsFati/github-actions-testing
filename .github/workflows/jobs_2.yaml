@@ -23,7 +23,7 @@ jobs:
           echo "Build completado correctamente."
 
       # Probamos el caso de fallo
-      - run: exit 1
+     # - run: exit 1
 
   # Job de despliegue ("deploy"), que depende de build
   deploy:

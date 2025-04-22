@@ -1,0 +1,44 @@
+name: Demo Jobs & Steps
+
+permissions:
+  contents: write
+
+on:
+  workflow_dispatch:
+
+jobs:
+  demo-job:
+    runs-on: labs-runner
+    permissions:
+      contents: write
+    steps:
+      # Checkout para obtener el código y permitir el push
+      - name: Checkout del repositorio
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          persist-credentials: true   # permite usar GITHUB_TOKEN para push
+
+      # Mostrar fecha y hora actual
+      - name: Mostrar fecha y hora
+        run: date
+
+      # Crear un archivo de texto con un mensaje y timestamp
+      - name: Crear archivo automated.txt
+        run: |
+          echo "Este archivo fue creado por GitHub Actions en: $(date)" \
+            > automated.txt
+
+      # Listar todos los archivos del workspace
+      - name: Listar archivos
+        run: ls -la
+
+      # Commit y push de los cambios (solo automated.txt)
+      - name: Sincronizar con remoto y push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git pull --rebase           #Integra los cambios remotos
+          git add automated.txt
+          git diff --cached --quiet || git commit -m "chore: agregar automated.txt desde workflow"
+          git push

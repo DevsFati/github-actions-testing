@@ -1,0 +1,36 @@
+name: Build and Deploy Workflow
+
+on:
+  workflow_dispatch:
+
+jobs:
+  # Job de compilación ("build")
+  build:
+    name: Build
+    runs-on: labs-runner
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v3
+
+      - name: Instalar Java y Maven
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openjdk-11-jdk maven        
+      - name: Ejecutar paso de build
+        run: |
+          echo "Iniciando build..."
+           mvn package 
+          echo "Build completado correctamente."
+
+      # Probamos el caso de fallo
+      - run: exit 1
+
+  # Job de despliegue ("deploy"), que depende de build
+  deploy:
+    name: Deploy
+    needs: build        # solo corre si build termina con éxito
+    runs-on: labs-runner
+    steps:
+      - name: Imprimir mensaje de deploy
+        run: |
+          echo "Desplegando la aplicación porque build fue exitoso."

@@ -7,7 +7,7 @@ jobs:
   # Job de compilación ("build")
   build:
     name: Build
-    runs-on: labs-runner
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout del código
         uses: actions/checkout@v3
@@ -29,7 +29,7 @@ jobs:
   deploy:
     name: Deploy
     needs: build        # solo corre si build termina con éxito
-    runs-on: labs-runner
+    runs-on: ubuntu-latest
     steps:
       - name: Imprimir mensaje de deploy
         run: |
